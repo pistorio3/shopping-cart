@@ -1,7 +1,3 @@
-// Pistório
-
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,18 +24,51 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
+
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
+
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
+
+// New Functions
+//----------------------------------------------------------------------------------------------------------------------
+
+// Cria os elementos HTML com auxílio das funções nativas
+function createProduct(products) {
+  products.forEach((product) => {
+    const computer = {
+      sku: product.id,
+      name: product.title,
+      image: product.thumbnail,
+    };
+
+    const element = createProductItemElement(computer);
+    const section = document.querySelector('.items');
+
+    section.appendChild(element);
+  });
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+// Consulta a API do ML
+async function getComputers() {
+  const products = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((res) => res.json());
+
+  console.log(products.results);
+  createProduct(products.results);
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// Chamada da função de consulta ao carregar a página
+window.onload = function onload() { 
+  getComputers(); 
+};
