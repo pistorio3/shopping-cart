@@ -1,13 +1,40 @@
+let totalCart = 0;
+
+// Developed Function - ESlint required
 function getCartClass() {
   const cart = document.querySelector('.cart__items');
   return cart;
+}
+
+// Developed Function 
+function getTotalCart() {
+  const totalPrice = document.querySelector('.total-price');
+  return totalPrice;
+}
+
+// Developed Function
+async function sumCart(price) {
+  totalCart += price;
+  const totalPrice = getTotalCart();
+  totalPrice.innerHTML = totalCart;
+}
+
+// Developed Function
+async function subtractionCart(price) {
+  totalCart -= price;
+  const totalPrice = getTotalCart();
+  totalPrice.innerText = totalCart;
+
+  if (totalCart <= 0) { totalCart = 0; totalPrice.innerText = totalCart; }
 }
 
 // Developed Function
 function saveCart() {
   const cart = getCartClass();
   const listOfProducts = cart.innerHTML;
+  const totalPrice = getTotalCart();
   localStorage.Cart = listOfProducts;
+  localStorage.CartValue = totalPrice.innerHTML;
 }
 
 // Native Function
@@ -29,6 +56,8 @@ function createCustomElement(element, className, innerText) {
 // Native Function - Developed Function
 function cartItemClickListener(event) {
   const valueToRemove = event.target;
+  console.log(valueToRemove);
+  subtractionCart(parseFloat(valueToRemove.price));
   valueToRemove.parentNode.removeChild(valueToRemove);
   saveCart();
 }
@@ -48,6 +77,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.price = salePrice; 
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
@@ -59,6 +89,8 @@ function getSkuFromProductItem(item) {
 
 // Developed Function
 function sendToCart(product) {
+  sumCart(product.price);
+
   const productCart = {
     sku: product.id,
     name: product.title,
@@ -121,7 +153,6 @@ async function getProducts() {
   const products = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
   .then((res) => res.json());
 
-  console.log(products.results);
   createProduct(products.results);
 }
 
