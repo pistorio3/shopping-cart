@@ -1,3 +1,15 @@
+function getCartClass() {
+  const cart = document.querySelector('.cart__items');
+  return cart;
+}
+
+// Developed Function
+function saveCart() {
+  const cart = getCartClass();
+  const listOfProducts = cart.innerHTML;
+  localStorage.Cart = listOfProducts;
+}
+
 // Native Function
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -14,10 +26,21 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Native Function - Developed Function
 function cartItemClickListener(event) {
   const valueToRemove = event.target;
-
   valueToRemove.parentNode.removeChild(valueToRemove);
+  saveCart();
+}
+
+// Developed Function 
+function loadCart() {
+  const cart = getCartClass();
+  const toCart = cart;
+
+  if (localStorage.Cart) {
+    toCart.innerHTML = localStorage.Cart;
+  }
 }
 
 // Native Function
@@ -43,8 +66,9 @@ function sendToCart(product) {
   };
 
   const element = createCartItemElement(productCart);
-  const cart = document.querySelector('.cart__items');
+  const cart = getCartClass();
   cart.appendChild(element);
+  saveCart();
 }
 
 // Developed Function
@@ -102,6 +126,7 @@ async function getProducts() {
 }
 
 // Chamada da função de consulta ao carregar a página
-window.onload = function onload() { 
+window.onload = function onload() {
   getProducts(); 
+  loadCart();
 };
