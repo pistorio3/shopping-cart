@@ -1,3 +1,4 @@
+// Global variable
 let totalCart = 0;
 
 // Developed Function - ESlint required
@@ -67,10 +68,30 @@ function loadCart() {
   const cart = getCartClass();
   const toCart = cart;
 
+  const value = getTotalCart();
+  const toValue = value;
+
   if (localStorage.Cart) {
     toCart.innerHTML = localStorage.Cart;
+    toValue.innerHTML = localStorage.CartValue;
   }
 }
+
+// Developed Function 
+const clearListener = () => {
+  const cart = getCartClass();
+  const totalValue = getTotalCart();
+  const clearButton = document.querySelector('.empty-cart');
+
+  function clearAllCart() {
+    totalCart = 0;
+    cart.innerHTML = '';
+    totalValue.innerHTML = totalCart;
+    localStorage.clear();
+  }
+
+  clearButton.addEventListener('click', clearAllCart);
+};
 
 // Native Function
 function createCartItemElement({ sku, name, salePrice }) {
@@ -160,4 +181,5 @@ async function getProducts() {
 window.onload = function onload() {
   getProducts(); 
   loadCart();
+  clearListener();
 };
